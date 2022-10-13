@@ -10,16 +10,16 @@ function useTimer(initialSeconds: number, stopCondition?: boolean) {
       setSeconds(seconds - 1);
     }, 1000);
 
-    if (seconds === 0 || stopCondition) stopTimer();
+    if (seconds === 0 || stopCondition === true) stopTimer();
     if (seconds === 0) setIsTimerDone(true);
   }, [seconds, stopCondition]);
 
-  function restartTimer() {
+  function restartTimer(): void {
     setIsTimerDone(false);
     setSeconds(initialSeconds);
   }
 
-  function stopTimer() {
+  function stopTimer(): void {
     clearInterval(timer);
   }
 

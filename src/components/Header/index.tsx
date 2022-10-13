@@ -2,7 +2,6 @@ import { useContext, useEffect, useState } from 'react';
 import { FaQuestionCircle, FaChartBar } from 'react-icons/fa';
 import { ThemeContext } from '../../contexts/ThemeContext';
 import ToggleButton from '../ToggleButton';
-import Modal from '../Modal';
 import Instructions from '../Instructions';
 import Statistics from '../Statistics';
 import { GameContext } from '../../contexts/GameContext';

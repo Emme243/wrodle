@@ -24,7 +24,9 @@ function LetterContainer({ letter, size = 'medium', className, onClick }: ILette
 
   return (
     <div
-      className={`flex items-center justify-center rounded-md border border-zinc-300 capitalize dark:border-zinc-700 ${className} ${letterBackground()}`}
+      className={`flex items-center justify-center rounded-md border border-zinc-300 capitalize dark:border-zinc-700 ${
+        className ?? ''
+      } ${letterBackground()}`}
       onClick={onClick}
     >
       <span className={fontSizeClass}>{letter.value}</span>
@@ -33,5 +35,3 @@ function LetterContainer({ letter, size = 'medium', className, onClick }: ILette
 }
 
 export default LetterContainer;
-
-export class ILetterState {}

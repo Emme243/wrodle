@@ -33,7 +33,7 @@ function generateExample(example: IExample) {
     <div className="align-center flex space-x-2">
       {example.map((letter, letterIndex) => (
         <LetterContainer
-          key={`example-${letterIndex + 1}-letter-${letter.value}`}
+          key={`example-${letterIndex + 1}-letter-${letter.value as string}`}
           className="h-16 w-16"
           letter={letter}
         />

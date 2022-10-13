@@ -2,7 +2,6 @@ import { createContext, ReactNode, useEffect, useReducer, useState } from 'react
 import { ILetter } from '../interfaces/Letter';
 import WordCatalog from '../content/word-catalog.txt';
 import { initialState, reducer } from '../reducers/GameReducer';
-import { IGameState } from '../interfaces/GameState';
 import { IGameAction } from '../interfaces/GameAction';
 import { removeLetterAccents } from '../helpers/removeLetterAccents';
 import useTimer from '../hooks/useTimer';
@@ -11,7 +10,7 @@ interface IGameContextProviderProps {
   children: ReactNode;
 }
 
-type IGameContext = {
+interface IGameContext {
   setPressedLetter: React.Dispatch<React.SetStateAction<string | null>>;
   dispatch: React.Dispatch<IGameAction>;
   hasWon: boolean;
@@ -24,7 +23,7 @@ type IGameContext = {
   resetGame: () => void;
   backspace: () => void;
   secondsInTimer: number;
-};
+}
 
 const SECONDS_IN_TIMER = 300;
 
@@ -40,7 +39,7 @@ const GameContext = createContext<IGameContext>({
   isGameOver: false,
   resetGame: () => {},
   backspace: () => {},
-  secondsInTimer: SECONDS_IN_TIMER,
+  secondsInTimer: SECONDS_IN_TIMER
 });
 
 function GameContextProvider({ children }: IGameContextProviderProps) {
@@ -52,8 +51,8 @@ function GameContextProvider({ children }: IGameContextProviderProps) {
     pressedLetters,
     isGameOver,
     numberOfGames,
-    numberOfVictories,
-  } = state as IGameState;
+    numberOfVictories
+  } = state;
 
   const { seconds, restartTimer, isTimerDone } = useTimer(SECONDS_IN_TIMER, isGameOver);
   useEffect(() => {
@@ -94,7 +93,7 @@ function GameContextProvider({ children }: IGameContextProviderProps) {
     window.addEventListener('keydown', downHandler);
     window.addEventListener('keyup', upHandler);
 
-    fetchWordCatalog().then(function (words) {
+    void fetchWordCatalog().then(function (words) {
       dispatch({ type: 'RESET_GAME' });
       dispatch({ type: 'SET_WORD_CATALOG', payload: words });
       dispatch({ type: 'SET_SELECTED_WORD' });
@@ -119,9 +118,9 @@ function GameContextProvider({ children }: IGameContextProviderProps) {
           lettersFromSelectedWord
             .map(letter => ({ value: removeLetterAccents(letter.value) }))
             .some(l => l.value === letter.value)
-        )
+        ) {
           letter.state = 'close';
-        else letter.state = 'wrong';
+        } else letter.state = 'wrong';
       });
       dispatch({ type: 'SET_PRESSED_LETTERS', payload: pressedLetters });
       dispatch({ type: 'CHECK_HAS_LOST' });
@@ -160,7 +159,7 @@ function GameContextProvider({ children }: IGameContextProviderProps) {
         numberOfGames,
         numberOfVictories,
         isGameOver,
-        secondsInTimer: seconds,
+        secondsInTimer: seconds
       }}
     >
       {children}

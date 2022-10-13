@@ -1,6 +1,6 @@
 import { FiDelete } from 'react-icons/all';
 import LetterContainer from '../LetterContainer';
-import { ReactNode, useContext, useEffect, useState } from 'react';
+import { ReactNode, useContext } from 'react';
 import { GameContext } from '../../contexts/GameContext';
 import { ILetter } from '../../interfaces/Letter';
 
@@ -8,7 +8,7 @@ const generateLetterObject = (letter: ReactNode): ILetter => ({ value: letter, s
 const keyboardRows = [
   ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'].map(generateLetterObject),
   ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'ñ'].map(generateLetterObject),
-  ['enter', 'z', 'x', 'c', 'v', 'b', 'n', 'm', 'backspace'].map(generateLetterObject),
+  ['enter', 'z', 'x', 'c', 'v', 'b', 'n', 'm', 'backspace'].map(generateLetterObject)
 ];
 
 function Keyboard() {

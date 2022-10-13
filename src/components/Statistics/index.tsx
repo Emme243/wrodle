@@ -16,7 +16,7 @@ function Statistics({ onClose, isOpen }: IStatisticsProps) {
     numberOfVictories,
     numberOfGames,
     resetGame,
-    secondsInTimer,
+    secondsInTimer
   } = useContext(GameContext);
 
   function handleClose() {

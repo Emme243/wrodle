@@ -15,19 +15,18 @@ export const initialState: IGameState = {
   wordCatalog: [],
   numberOfGames: 0,
   numberOfVictories: 0,
-  isGameOver: false,
+  isGameOver: false
 };
 
-export const reducer = (state: IGameState, action: IGameAction) => {
+export const reducer = (state: IGameState, action: IGameAction): IGameState => {
   switch (action.type) {
     case 'SET_SELECTED_WORD': {
       const randomWord = state.wordCatalog[Math.floor(Math.random() * state.wordCatalog.length)];
       const newCatalog = state.wordCatalog.filter(word => word !== randomWord);
-      console.log({ randomWord });
       return {
         ...state,
         selectedWord: randomWord,
-        wordCatalog: newCatalog,
+        wordCatalog: newCatalog
       };
     }
     case 'CHECK_HAS_WON': {
@@ -41,7 +40,7 @@ export const reducer = (state: IGameState, action: IGameAction) => {
 
       return {
         ...state,
-        hasWon,
+        hasWon
       };
     }
     case 'CHECK_HAS_LOST': {
@@ -52,22 +51,16 @@ export const reducer = (state: IGameState, action: IGameAction) => {
 
       return {
         ...state,
-        hasLost,
-      };
-    }
-    case 'SET_HAS_LOST': {
-      return {
-        ...state,
-        hasLost: action.payload,
+        hasLost
       };
     }
     case 'ADD_PRESSED_LETTER': {
       const newPressedLetters = [...state.pressedLetters];
       const index = newPressedLetters.findIndex(letter => letter.value === '');
-      newPressedLetters[index] = action.payload;
+      newPressedLetters[index] = action.payload as ILetter;
       return {
         ...state,
-        pressedLetters: newPressedLetters,
+        pressedLetters: newPressedLetters
       };
     }
     case 'BACKSPACE': {
@@ -76,7 +69,7 @@ export const reducer = (state: IGameState, action: IGameAction) => {
       newPressedLetters[index2 - 1] = { value: '', state: 'default' };
       return {
         ...state,
-        pressedLetters: newPressedLetters,
+        pressedLetters: newPressedLetters
       };
     }
     case 'RESET_GAME': {
@@ -84,37 +77,37 @@ export const reducer = (state: IGameState, action: IGameAction) => {
         ...initialState,
         wordCatalog: state.wordCatalog,
         numberOfGames: state.numberOfGames,
-        numberOfVictories: state.numberOfVictories,
+        numberOfVictories: state.numberOfVictories
       };
     }
     case 'SET_WORD_CATALOG': {
       return {
         ...state,
-        wordCatalog: action.payload,
+        wordCatalog: action.payload as string[]
       };
     }
     case 'SET_PRESSED_LETTERS': {
       return {
         ...state,
-        pressedLetters: action.payload,
+        pressedLetters: action.payload as ILetter[]
       };
     }
     case 'INCREMENT_NUMBER_OF_GAMES': {
       return {
         ...state,
-        numberOfGames: state.numberOfGames + 1,
+        numberOfGames: state.numberOfGames + 1
       };
     }
     case 'INCREMENT_NUMBER_OF_VICTORIES': {
       return {
         ...state,
-        numberOfVictories: state.numberOfVictories + 1,
+        numberOfVictories: state.numberOfVictories + 1
       };
     }
     case 'SET_IS_GAME_OVER': {
       return {
         ...state,
-        isGameOver: action.payload,
+        isGameOver: action.payload as boolean
       };
     }
     default:

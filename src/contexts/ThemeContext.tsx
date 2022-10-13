@@ -13,7 +13,7 @@ interface IThemeContext {
 
 const ThemeContext = createContext<IThemeContext>({
   theme: 'light',
-  toggleTheme: () => {},
+  toggleTheme: () => {}
 });
 
 function ThemeContextProvider({ children }: IThemeContextProviderProps) {
