@@ -10,7 +10,20 @@ const keyboardRows = [
 ];
 
 function Keyboard() {
-  const { setPressedLetter } = useContext(GameContext);
+  const { setPressedLetter, backspace } = useContext(GameContext);
+
+  function onClickLetter(letter: string) {
+    switch (letter) {
+      case 'backspace':
+        backspace();
+        break;
+      case 'enter':
+        setPressedLetter(null);
+        break;
+      default:
+        setPressedLetter(letter);
+    }
+  }
 
   function rowClasses(rowIndex: number) {
     switch (rowIndex) {
@@ -59,7 +72,7 @@ function Keyboard() {
               key={letterIndex}
               letter={{ value: letterToDisplay(letter), state: 'default' }}
               size="small"
-              onClick={() => setPressedLetter(letter)}
+              onClick={() => onClickLetter(letter)}
               className={letterClasses(letter) + ' cursor-pointer'}
             />
           ))}

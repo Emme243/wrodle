@@ -20,7 +20,7 @@ export const initialState: IGameState = {
 
 export const reducer = (state: IGameState, action: IGameAction) => {
   switch (action.type) {
-    case 'SET_SELECTED_WORD':
+    case 'SET_SELECTED_WORD': {
       const randomWord = state.wordCatalog[Math.floor(Math.random() * state.wordCatalog.length)];
       const newCatalog = state.wordCatalog.filter(word => word !== randomWord);
       return {
@@ -28,7 +28,8 @@ export const reducer = (state: IGameState, action: IGameAction) => {
         selectedWord: randomWord,
         wordCatalog: newCatalog,
       };
-    case 'CHECK_HAS_WON':
+    }
+    case 'CHECK_HAS_WON': {
       const lastFiveLetters = state.pressedLetters.filter(letter => letter.value !== '').slice(-5);
       const wordGuessed = lastFiveLetters.map(letter => letter.value).join('');
       const selectedWordWithoutAccents = state.selectedWord
@@ -41,7 +42,8 @@ export const reducer = (state: IGameState, action: IGameAction) => {
         ...state,
         hasWon,
       };
-    case 'CHECK_HAS_LOST':
+    }
+    case 'CHECK_HAS_LOST': {
       const lastFiveLettersAreWrong = state.pressedLetters
         .slice(-5)
         .some(letter => letter.state === 'wrong' || letter.state === 'close');
@@ -51,7 +53,8 @@ export const reducer = (state: IGameState, action: IGameAction) => {
         ...state,
         hasLost,
       };
-    case 'ADD_PRESSED_LETTER':
+    }
+    case 'ADD_PRESSED_LETTER': {
       const newPressedLetters = [...state.pressedLetters];
       const index = newPressedLetters.findIndex(letter => letter.value === '');
       newPressedLetters[index] = action.payload;
@@ -59,38 +62,54 @@ export const reducer = (state: IGameState, action: IGameAction) => {
         ...state,
         pressedLetters: newPressedLetters,
       };
-    case 'RESET_GAME':
+    }
+    case 'BACKSPACE': {
+      const newPressedLetters = [...state.pressedLetters];
+      const index2 = newPressedLetters.findIndex(letter => letter.value === '');
+      newPressedLetters[index2 - 1] = { value: '', state: 'default' };
+      return {
+        ...state,
+        pressedLetters: newPressedLetters,
+      };
+    }
+    case 'RESET_GAME': {
       return {
         ...initialState,
         wordCatalog: state.wordCatalog,
         numberOfGames: state.numberOfGames,
         numberOfVictories: state.numberOfVictories,
       };
-    case 'SET_WORD_CATALOG':
+    }
+    case 'SET_WORD_CATALOG': {
       return {
         ...state,
         wordCatalog: action.payload,
       };
-    case 'SET_PRESSED_LETTERS':
+    }
+    case 'SET_PRESSED_LETTERS': {
       return {
         ...state,
         pressedLetters: action.payload,
       };
-    case 'INCREMENT_NUMBER_OF_GAMES':
+    }
+    case 'INCREMENT_NUMBER_OF_GAMES': {
       return {
         ...state,
         numberOfGames: state.numberOfGames + 1,
       };
-    case 'INCREMENT_NUMBER_OF_VICTORIES':
+    }
+    case 'INCREMENT_NUMBER_OF_VICTORIES': {
       return {
         ...state,
         numberOfVictories: state.numberOfVictories + 1,
       };
-    case 'SET_IS_GAME_OVER':
+    }
+    case 'SET_IS_GAME_OVER': {
       return {
         ...state,
         isGameOver: action.payload,
       };
+    }
     default:
       return state;
   }

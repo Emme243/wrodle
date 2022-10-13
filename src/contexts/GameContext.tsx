@@ -11,7 +11,7 @@ interface IGameContextProviderProps {
 }
 
 type IGameContext = {
-  setPressedLetter: (letter: string) => void;
+  setPressedLetter: React.Dispatch<React.SetStateAction<string | null>>;
   dispatch: React.Dispatch<IGameAction>;
   hasWon: boolean;
   hasLost: boolean;
@@ -21,6 +21,7 @@ type IGameContext = {
   numberOfGames: number;
   isGameOver: boolean;
   resetGame: () => void;
+  backspace: () => void;
 };
 
 const GameContext = createContext<IGameContext>({
@@ -34,6 +35,7 @@ const GameContext = createContext<IGameContext>({
   numberOfVictories: 0,
   isGameOver: false,
   resetGame: () => {},
+  backspace: () => {},
 });
 
 function GameContextProvider({ children }: IGameContextProviderProps) {
@@ -53,17 +55,17 @@ function GameContextProvider({ children }: IGameContextProviderProps) {
   const [pressedLetter, setPressedLetter] = useState<string | null>(null);
   useEffect(() => {
     if (isGameOver) return;
-    if (pressedLetter && pressedLetter !== 'backspace' && pressedLetter !== 'enter') {
-      const letter: ILetter = { value: pressedLetter, state: 'default' };
-      dispatch({ type: 'ADD_PRESSED_LETTER', payload: letter });
-      setPressedLetter(null);
-    }
+    if (pressedLetter === null) return;
+    const letter: ILetter = { value: pressedLetter, state: 'default' };
+    dispatch({ type: 'ADD_PRESSED_LETTER', payload: letter });
+    setPressedLetter(null);
   }, [pressedLetter, isGameOver]);
 
   useEffect(() => {
     const downHandler = (keyboardEvent: KeyboardEvent) => {
       const { code, key } = keyboardEvent;
       if (code.startsWith('Key')) setPressedLetter(key.toLowerCase());
+      else if (code === 'Backspace') backspace();
       else setPressedLetter(null);
     };
     const upHandler = () => setPressedLetter(null);
@@ -113,12 +115,18 @@ function GameContextProvider({ children }: IGameContextProviderProps) {
     if (hasWon) dispatch({ type: 'INCREMENT_NUMBER_OF_VICTORIES' });
   }, [hasWon, hasLost]);
 
+  function backspace() {
+    if (isGameOver) return;
+    dispatch({ type: 'BACKSPACE' });
+  }
+
   return (
     <GameContext.Provider
       value={{
         dispatch,
         setPressedLetter,
         resetGame,
+        backspace,
         hasLost: state.hasLost,
         hasWon: state.hasWon,
         selectedWord: state.selectedWord,
