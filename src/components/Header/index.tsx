@@ -31,7 +31,7 @@ function Header() {
 
   return (
     <>
-      <header className="flex items-center justify-between rounded-md bg-gray-100 px-8 py-4 text-lg dark:bg-zinc-800">
+      <header className="flex items-center justify-between rounded-md bg-modal-light px-8 py-4 text-lg dark:bg-[#dadce0]/30">
         <FaQuestionCircle className="cursor-pointer" onClick={handleInstructionsModalOpen} />
         <h1 className="ml-auto font-bold tracking-wider">WORDLE</h1>
         <FaChartBar onClick={handleStatisticsModalOpen} className="ml-auto mr-4 cursor-pointer" />

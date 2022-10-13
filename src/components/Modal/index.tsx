@@ -26,10 +26,10 @@ function Modal({ children, isOpen, onClose }: IModalProps) {
   return (
     <div className="fixed top-0 left-0 z-50 !m-0 flex h-full w-full items-center justify-center">
       <div
-        className="absolute top-0 left-0 h-full w-full bg-black opacity-50"
+        className="absolute top-0 left-0 h-full w-full bg-modal-light/90 dark:bg-modal-dark/90"
         onClick={() => onClose()}
       />
-      <div className="z-50 max-h-[90vh] w-96 overflow-y-auto rounded-md border border-zinc-300 bg-white py-6 px-4 dark:border-zinc-700 dark:bg-zinc-900">
+      <div className="z-50 max-h-[90vh] w-96 overflow-y-auto rounded-md border border-black bg-modal-light py-6 px-4 dark:border-[#939b9f] dark:bg-modal-dark">
         {children}
       </div>
     </div>

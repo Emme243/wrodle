@@ -11,7 +11,19 @@ module.exports = {
       xl: '1280px',
       '2xl': '1536px'
     },
-    extend: {}
+    extend: {
+      fontFamily: {
+        roboto: ['Roboto', 'sans-serif'],
+      },
+      colors: {
+        dark: '#262B3C',
+        gray: '#939B9F',
+        green: '#66A060',
+        yellow: '#CEB02C',
+        'modal-light': "#f3f3f3",
+        'modal-dark': "#262b3c",
+      }
+    }
   },
   plugins: []
 };

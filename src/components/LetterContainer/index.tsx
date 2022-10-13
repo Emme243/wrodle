@@ -12,19 +12,19 @@ function LetterContainer({ letter, size = 'medium', className, onClick }: ILette
   function letterBackground() {
     switch (letter.state) {
       case 'correct':
-        return 'bg-green-400 dark:bg-green-800';
+        return 'bg-green text-white';
       case 'close':
-        return 'bg-yellow-300 dark:bg-yellow-600';
+        return 'bg-yellow text-white';
       case 'wrong':
-        return 'bg-gray-400 dark:bg-gray-600';
+        return 'bg-gray text-white';
       default:
-        return '';
+        return 'bg-gray/30';
     }
   }
 
   return (
     <div
-      className={`flex items-center justify-center rounded-md border border-zinc-300 capitalize dark:border-zinc-700 ${
+      className={`flex items-center justify-center rounded-md capitalize dark:border-zinc-700 ${
         className ?? ''
       } ${letterBackground()}`}
       onClick={onClick}

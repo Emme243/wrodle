@@ -51,7 +51,7 @@ function Statistics({ onClose, isOpen }: IStatisticsProps) {
         </div>
         <div className="text-center">
           <button
-            className="rounded bg-green-400 px-4 py-1 text-xl font-bold dark:bg-green-800"
+            className="rounded bg-green px-4 py-1 text-xl font-bold text-white"
             onClick={() => handleClose()}
           >
             Aceptar

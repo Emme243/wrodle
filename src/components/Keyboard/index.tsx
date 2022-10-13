@@ -71,7 +71,7 @@ function Keyboard() {
   }
 
   return (
-    <div className="keyboard space-y-2 rounded-xl bg-gray-100 p-3 dark:bg-zinc-800">
+    <div className="keyboard space-y-2 rounded-xl bg-[#dadce0]/30 p-3">
       {keyboardRows.map((row, rowIndex) => (
         <div
           key={`keyboard-row-${rowIndex}`}
