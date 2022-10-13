@@ -1,18 +1,20 @@
 import { FiDelete } from 'react-icons/all';
 import LetterContainer from '../LetterContainer';
-import { useContext } from 'react';
+import { ReactNode, useContext, useEffect, useState } from 'react';
 import { GameContext } from '../../contexts/GameContext';
+import { ILetter } from '../../interfaces/Letter';
 
+const generateLetterObject = (letter: ReactNode): ILetter => ({ value: letter, state: 'default' });
 const keyboardRows = [
-  ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'],
-  ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'ñ'],
-  ['enter', 'z', 'x', 'c', 'v', 'b', 'n', 'm', 'backspace'],
+  ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'].map(generateLetterObject),
+  ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'ñ'].map(generateLetterObject),
+  ['enter', 'z', 'x', 'c', 'v', 'b', 'n', 'm', 'backspace'].map(generateLetterObject),
 ];
 
 function Keyboard() {
-  const { setPressedLetter, backspace } = useContext(GameContext);
+  const { setPressedLetter, backspace, pressedLetters } = useContext(GameContext);
 
-  function onClickLetter(letter: string) {
+  function onClickLetter(letter: ILetter['value']) {
     switch (letter) {
       case 'backspace':
         backspace();
@@ -21,7 +23,7 @@ function Keyboard() {
         setPressedLetter(null);
         break;
       default:
-        setPressedLetter(letter);
+        setPressedLetter(letter as string);
     }
   }
 
@@ -38,7 +40,7 @@ function Keyboard() {
     }
   }
 
-  function letterClasses(letter: string) {
+  function letterClasses(letter: ILetter['value']) {
     switch (letter) {
       case 'enter':
         return 'w-20';
@@ -49,7 +51,7 @@ function Keyboard() {
     }
   }
 
-  function letterToDisplay(letter: string) {
+  function letterToDisplay(letter: ILetter['value']) {
     switch (letter) {
       case 'enter':
         return 'Enter';
@@ -58,6 +60,14 @@ function Keyboard() {
       default:
         return letter;
     }
+  }
+
+  function checkLetterState(letter: ILetter): ILetter['state'] {
+    const letterInPressedLetters = pressedLetters.find(
+      pressedLetter => pressedLetter.value === letter.value
+    );
+    if (letterInPressedLetters) return letterInPressedLetters.state;
+    return 'default';
   }
 
   return (
@@ -70,10 +80,10 @@ function Keyboard() {
           {row.map((letter, letterIndex) => (
             <LetterContainer
               key={letterIndex}
-              letter={{ value: letterToDisplay(letter), state: 'default' }}
+              letter={{ value: letterToDisplay(letter.value), state: checkLetterState(letter) }}
               size="small"
-              onClick={() => onClickLetter(letter)}
-              className={letterClasses(letter) + ' cursor-pointer'}
+              onClick={() => onClickLetter(letter.value)}
+              className={letterClasses(letter.value) + ' cursor-pointer'}
             />
           ))}
         </div>
