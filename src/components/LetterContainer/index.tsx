@@ -1,20 +1,16 @@
-import { ReactNode } from 'react';
+import { ILetter } from '../../interfaces/Letter';
 
-type ILetterSize = 'small' | 'medium';
-export type ILetterState = 'default' | 'correct' | 'close' | 'wrong';
-
-interface ILetterProps {
-  letter: ReactNode | null;
-  size?: ILetterSize;
+interface ILetterContainerProps {
+  letter: ILetter;
+  size?: 'small' | 'medium';
   className?: string;
   onClick?: () => void;
-  state?: ILetterState;
 }
 
-function Letter({ letter, size = 'medium', className, onClick, state = 'default' }: ILetterProps) {
+function LetterContainer({ letter, size = 'medium', className, onClick }: ILetterContainerProps) {
   const fontSizeClass = size === 'small' ? 'text-base' : 'text-2xl font-bold';
   function letterBackground() {
-    switch (state) {
+    switch (letter.state) {
       case 'correct':
         return 'bg-green-400 dark:bg-green-800';
       case 'close':
@@ -31,9 +27,9 @@ function Letter({ letter, size = 'medium', className, onClick, state = 'default'
       className={`flex items-center justify-center rounded-md border border-zinc-300 capitalize dark:border-zinc-700 ${className} ${letterBackground()}`}
       onClick={onClick}
     >
-      <span className={fontSizeClass}>{letter}</span>
+      <span className={fontSizeClass}>{letter.value}</span>
     </div>
   );
 }
 
-export default Letter;
+export default LetterContainer;

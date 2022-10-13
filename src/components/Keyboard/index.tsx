@@ -1,5 +1,5 @@
 import { FiDelete } from 'react-icons/all';
-import Letter from '../Letter';
+import LetterContainer from '../LetterContainer';
 import { useContext } from 'react';
 import { GameContext } from '../../contexts/GameContext';
 
@@ -10,7 +10,7 @@ const keyboardRows = [
 ];
 
 function Keyboard() {
-  const { setPressedKey } = useContext(GameContext);
+  const { setPressedLetter } = useContext(GameContext);
 
   function rowClasses(rowIndex: number) {
     switch (rowIndex) {
@@ -55,11 +55,11 @@ function Keyboard() {
           className={`flex items-stretch space-x-2 ${rowClasses(rowIndex)}`}
         >
           {row.map((letter, letterIndex) => (
-            <Letter
+            <LetterContainer
               key={letterIndex}
-              letter={letterToDisplay(letter)}
+              letter={{ value: letterToDisplay(letter), state: 'default' }}
               size="small"
-              onClick={() => setPressedKey(letter)}
+              onClick={() => setPressedLetter(letter)}
               className={letterClasses(letter) + ' cursor-pointer'}
             />
           ))}

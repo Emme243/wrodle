@@ -1,14 +1,14 @@
-import Letter from '../Letter';
+import LetterContainer from '../LetterContainer';
 import { useContext } from 'react';
 import { GameContext } from '../../contexts/GameContext';
 
 function Board() {
-  const { pressedKeys } = useContext(GameContext);
+  const { pressedLetters } = useContext(GameContext);
 
   return (
     <div className="mx-auto grid w-[70%] grid-cols-5 grid-rows-5 gap-2">
-      {pressedKeys.map((key, index) => (
-        <Letter key={index} {...key} className="h-16" />
+      {pressedLetters.map((letter, index) => (
+        <LetterContainer key={index} letter={letter} className="h-16" />
       ))}
     </div>
   );

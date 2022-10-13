@@ -1,20 +1,20 @@
-import Letter, { ILetterState } from '../Letter';
-import { KeyLetter } from '../../interfaces/Key';
+import LetterContainer, { ILetterState } from '../LetterContainer';
+import { ILetter } from '../../interfaces/Letter';
 
 interface IHowToPlayModalProps {
   onButtonClick: () => void;
 }
 
-type IExample = KeyLetter[];
+type IExample = ILetter[];
 
 function generateLetterObject(
   letter: string,
   condition: boolean,
   newStateAccordingToCondition: ILetterState
-): KeyLetter {
+): ILetter {
   let state: ILetterState = 'default';
   if (condition) state = newStateAccordingToCondition;
-  return { letter, state };
+  return { value: letter, state };
 }
 const example1: IExample = 'gatos'
   .split('')
@@ -30,8 +30,8 @@ function generateExample(example: IExample) {
   return (
     <div className="align-center flex space-x-2">
       {example.map((letterObject, letterIndex) => (
-        <Letter
-          key={`example-${letterIndex + 1}-letter-${letterObject.letter}`}
+        <LetterContainer
+          key={`example-${letterIndex + 1}-letter-${letterObject.value}`}
           className="h-16 w-16"
           {...letterObject}
         />
