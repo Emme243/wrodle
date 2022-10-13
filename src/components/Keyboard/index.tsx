@@ -12,12 +12,12 @@ const keyboardRows = [
 ];
 
 function Keyboard() {
-  const { setPressedLetter, backspace, pressedLetters } = useContext(GameContext);
+  const { setPressedLetter, setIsBackspacePressed, pressedLetters } = useContext(GameContext);
 
   function onClickLetter(letter: ILetter['value']) {
     switch (letter) {
       case 'backspace':
-        backspace();
+        setIsBackspacePressed(true);
         break;
       case 'enter':
         setPressedLetter(null);

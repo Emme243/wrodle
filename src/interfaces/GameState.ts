@@ -1,12 +1,12 @@
 import { ILetter } from './Letter';
 
 export interface IGameState {
-  hasWon: boolean;
   hasLost: boolean;
+  hasWon: boolean;
   isGameOver: boolean;
-  selectedWord: string;
-  pressedLetters: ILetter[];
-  wordCatalog: string[];
-  numberOfVictories: number;
   numberOfGames: number;
+  numberOfVictories: number;
+  pressedLetters: ILetter[];
+  selectedWord: string;
+  wordCatalog: string[];
 }

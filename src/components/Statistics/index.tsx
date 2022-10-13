@@ -10,13 +10,13 @@ interface IStatisticsProps {
 
 function Statistics({ onClose, isOpen }: IStatisticsProps) {
   const {
-    isGameOver,
     hasLost,
-    selectedWord,
-    numberOfVictories,
+    isGameOver,
     numberOfGames,
+    numberOfVictories,
     resetGame,
-    secondsInTimer
+    secondsInTimer,
+    selectedWord
   } = useContext(GameContext);
 
   function handleClose() {

@@ -1,45 +1,54 @@
-import { createContext, ReactNode, useEffect, useReducer, useState } from 'react';
+import {
+  Dispatch,
+  ReactNode,
+  SetStateAction,
+  createContext,
+  useEffect,
+  useReducer,
+  useState
+} from 'react';
 import { ILetter } from '../interfaces/Letter';
 import WordCatalog from '../content/word-catalog.txt';
 import { initialState, reducer } from '../reducers/GameReducer';
 import { IGameAction } from '../interfaces/GameAction';
 import { removeLetterAccents } from '../helpers/removeLetterAccents';
 import useTimer from '../hooks/useTimer';
+import getPressedLettersWithValues from '../helpers/getPressedLettersWithValues';
 
 interface IGameContextProviderProps {
   children: ReactNode;
 }
 
 interface IGameContext {
-  setPressedLetter: React.Dispatch<React.SetStateAction<string | null>>;
-  dispatch: React.Dispatch<IGameAction>;
-  hasWon: boolean;
+  dispatch: Dispatch<IGameAction>;
   hasLost: boolean;
-  selectedWord: string;
-  pressedLetters: ILetter[];
-  numberOfVictories: number;
-  numberOfGames: number;
+  hasWon: boolean;
   isGameOver: boolean;
+  numberOfGames: number;
+  numberOfVictories: number;
+  pressedLetters: ILetter[];
   resetGame: () => void;
-  backspace: () => void;
   secondsInTimer: number;
+  selectedWord: string;
+  setIsBackspacePressed: Dispatch<SetStateAction<boolean>>;
+  setPressedLetter: Dispatch<SetStateAction<string | null>>;
 }
 
 const SECONDS_IN_TIMER = 300;
 
 const GameContext = createContext<IGameContext>({
-  pressedLetters: [],
-  setPressedLetter: () => {},
+  dispatch: () => {},
   hasLost: false,
   hasWon: false,
-  selectedWord: '',
-  dispatch: () => {},
+  isGameOver: false,
   numberOfGames: 0,
   numberOfVictories: 0,
-  isGameOver: false,
+  pressedLetters: [],
   resetGame: () => {},
-  backspace: () => {},
-  secondsInTimer: SECONDS_IN_TIMER
+  secondsInTimer: SECONDS_IN_TIMER,
+  selectedWord: '',
+  setIsBackspacePressed: () => {},
+  setPressedLetter: () => {}
 });
 
 function GameContextProvider({ children }: IGameContextProviderProps) {
@@ -47,14 +56,23 @@ function GameContextProvider({ children }: IGameContextProviderProps) {
   const {
     hasLost,
     hasWon,
-    selectedWord,
-    pressedLetters,
     isGameOver,
     numberOfGames,
-    numberOfVictories
+    numberOfVictories,
+    pressedLetters,
+    selectedWord
   } = state;
 
-  const { seconds, restartTimer, isTimerDone } = useTimer(SECONDS_IN_TIMER, isGameOver);
+  const {
+    seconds: secondsInTimer,
+    restartTimer,
+    isTimerDone
+  } = useTimer(SECONDS_IN_TIMER, isGameOver);
+  function resetGame() {
+    dispatch({ type: 'RESET_GAME' });
+    dispatch({ type: 'SET_SELECTED_WORD' });
+    restartTimer();
+  }
   useEffect(() => {
     if (isTimerDone) {
       dispatch({ type: 'INCREMENT_NUMBER_OF_GAMES' });
@@ -62,31 +80,35 @@ function GameContextProvider({ children }: IGameContextProviderProps) {
     }
   }, [isTimerDone]);
 
-  async function fetchWordCatalog() {
-    const response = await fetch(WordCatalog);
-    const text = await response.text();
-    return text.split('\n').filter(word => word.length === 5);
-  }
-  function resetGame() {
-    dispatch({ type: 'RESET_GAME' });
-    dispatch({ type: 'SET_SELECTED_WORD' });
-    restartTimer();
-  }
+  const [isBackspacePressed, setIsBackspacePressed] = useState(false);
+  useEffect(() => {
+    if (isGameOver) return;
+    if (!isBackspacePressed) return;
+    const pressedLettersWithValues = getPressedLettersWithValues(pressedLetters);
+    if (pressedLettersWithValues.length > 0 && pressedLettersWithValues.length % 5 !== 0)
+      dispatch({ type: 'BACKSPACE' });
+    setIsBackspacePressed(false);
+  }, [isBackspacePressed, isGameOver]);
 
   const [pressedLetter, setPressedLetter] = useState<string | null>(null);
   useEffect(() => {
     if (isGameOver) return;
     if (pressedLetter === null) return;
-    const letter: ILetter = { value: pressedLetter, state: 'default' };
+    const letter: ILetter = { value: removeLetterAccents(pressedLetter), state: 'default' };
     dispatch({ type: 'ADD_PRESSED_LETTER', payload: letter });
     setPressedLetter(null);
   }, [pressedLetter, isGameOver]);
 
+  async function fetchWordCatalog() {
+    const response = await fetch(WordCatalog);
+    const text = await response.text();
+    return text.split('\n').filter(word => word.length === 5);
+  }
   useEffect(() => {
     const downHandler = (keyboardEvent: KeyboardEvent) => {
       const { code, key } = keyboardEvent;
       if (code.startsWith('Key')) setPressedLetter(key.toLowerCase());
-      else if (code === 'Backspace') backspace();
+      else if (code === 'Backspace') setIsBackspacePressed(true);
       else setPressedLetter(null);
     };
     const upHandler = () => setPressedLetter(null);
@@ -105,7 +127,7 @@ function GameContextProvider({ children }: IGameContextProviderProps) {
   }, []);
 
   useEffect(() => {
-    const pressedLettersWithValues = pressedLetters.filter(letter => letter.value !== '');
+    const pressedLettersWithValues = getPressedLettersWithValues(pressedLetters);
     if (pressedLettersWithValues.length > 0 && pressedLettersWithValues.length % 5 === 0) {
       const lastFiveLetters = pressedLettersWithValues.slice(-5);
       const lettersFromSelectedWord = selectedWord
@@ -140,26 +162,21 @@ function GameContextProvider({ children }: IGameContextProviderProps) {
     }
   }, [hasWon, hasLost, dispatch]);
 
-  function backspace() {
-    if (isGameOver) return;
-    dispatch({ type: 'BACKSPACE' });
-  }
-
   return (
     <GameContext.Provider
       value={{
         dispatch,
-        setPressedLetter,
-        resetGame,
-        backspace,
         hasLost,
         hasWon,
-        selectedWord,
-        pressedLetters,
+        isGameOver,
         numberOfGames,
         numberOfVictories,
-        isGameOver,
-        secondsInTimer: seconds
+        pressedLetters,
+        resetGame,
+        secondsInTimer,
+        selectedWord,
+        setIsBackspacePressed,
+        setPressedLetter
       }}
     >
       {children}
