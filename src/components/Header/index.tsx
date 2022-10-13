@@ -38,12 +38,8 @@ function Header() {
         <FaChartBar onClick={handleStatisticsModalOpen} className="ml-auto mr-4 cursor-pointer" />
         <ToggleButton isActive={theme === 'light'} handleToggleSwitch={toggleTheme} />
       </header>
-      <Modal isOpen={isInstructionsModalOpen} onClose={handleInstructionsModalClose}>
-        <Instructions onButtonClick={handleInstructionsModalClose} />
-      </Modal>
-      <Modal isOpen={isStatisticsModalOpen} onClose={handleStatisticsModalClose}>
-        <Statistics onButtonClick={handleStatisticsModalClose} />
-      </Modal>
+      <Instructions isOpen={isInstructionsModalOpen} onClose={handleInstructionsModalClose} />
+      <Statistics isOpen={isStatisticsModalOpen} onClose={handleStatisticsModalClose} />
     </>
   );
 }

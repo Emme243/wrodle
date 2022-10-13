@@ -40,7 +40,15 @@ const GameContext = createContext<IGameContext>({
 
 function GameContextProvider({ children }: IGameContextProviderProps) {
   const [state, dispatch] = useReducer(reducer, initialState);
-  const { hasLost, hasWon, selectedWord, pressedLetters, isGameOver } = state as IGameState;
+  const {
+    hasLost,
+    hasWon,
+    selectedWord,
+    pressedLetters,
+    isGameOver,
+    numberOfGames,
+    numberOfVictories,
+  } = state as IGameState;
 
   async function fetchWordCatalog() {
     const response = await fetch(WordCatalog);
@@ -108,12 +116,16 @@ function GameContextProvider({ children }: IGameContextProviderProps) {
   }, [pressedLetters]);
 
   useEffect(() => {
-    if (hasWon || hasLost) {
+    if (hasWon) {
+      dispatch({ type: 'INCREMENT_NUMBER_OF_VICTORIES' });
       dispatch({ type: 'SET_IS_GAME_OVER', payload: true });
       dispatch({ type: 'INCREMENT_NUMBER_OF_GAMES' });
     }
-    if (hasWon) dispatch({ type: 'INCREMENT_NUMBER_OF_VICTORIES' });
-  }, [hasWon, hasLost]);
+    if (hasLost) {
+      dispatch({ type: 'SET_IS_GAME_OVER', payload: true });
+      dispatch({ type: 'INCREMENT_NUMBER_OF_GAMES' });
+    }
+  }, [hasWon, hasLost, dispatch]);
 
   function backspace() {
     if (isGameOver) return;
@@ -127,13 +139,13 @@ function GameContextProvider({ children }: IGameContextProviderProps) {
         setPressedLetter,
         resetGame,
         backspace,
-        hasLost: state.hasLost,
-        hasWon: state.hasWon,
-        selectedWord: state.selectedWord,
-        pressedLetters: state.pressedLetters,
-        numberOfGames: state.numberOfGames,
-        numberOfVictories: state.numberOfVictories,
-        isGameOver: state.isGameOver,
+        hasLost,
+        hasWon,
+        selectedWord,
+        pressedLetters,
+        numberOfGames,
+        numberOfVictories,
+        isGameOver,
       }}
     >
       {children}

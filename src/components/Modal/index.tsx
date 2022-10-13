@@ -9,13 +9,13 @@ interface IModalProps {
 function Modal({ children, isOpen, onClose }: IModalProps) {
   useEffect(() => {
     const downHandler = ({ key }: KeyboardEvent) => {
-      if (key === 'Escape') onClose();
+      if (key === 'Escape' && isOpen) onClose();
     };
     window.addEventListener('keydown', downHandler);
     return () => {
       window.removeEventListener('keydown', downHandler);
     };
-  }, []);
+  }, [isOpen, onClose]);
 
   useEffect(() => {
     document.body.style.overflow = isOpen ? 'hidden' : 'auto';
