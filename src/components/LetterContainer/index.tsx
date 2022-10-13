@@ -33,3 +33,5 @@ function LetterContainer({ letter, size = 'medium', className, onClick }: ILette
 }
 
 export default LetterContainer;
+
+export class ILetterState {}

@@ -1,5 +1,5 @@
-import LetterContainer, { ILetterState } from '../LetterContainer';
-import { ILetter } from '../../interfaces/Letter';
+import LetterContainer from '../LetterContainer';
+import { ILetter, ILetterState } from '../../interfaces/Letter';
 
 interface IHowToPlayModalProps {
   onButtonClick: () => void;
@@ -29,11 +29,11 @@ const example3: IExample = 'canto'
 function generateExample(example: IExample) {
   return (
     <div className="align-center flex space-x-2">
-      {example.map((letterObject, letterIndex) => (
+      {example.map((letter, letterIndex) => (
         <LetterContainer
-          key={`example-${letterIndex + 1}-letter-${letterObject.value}`}
+          key={`example-${letterIndex + 1}-letter-${letter.value}`}
           className="h-16 w-16"
-          {...letterObject}
+          letter={letter}
         />
       ))}
     </div>

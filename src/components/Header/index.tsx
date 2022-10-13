@@ -5,9 +5,11 @@ import ToggleButton from '../ToggleButton';
 import Modal from '../Modal';
 import Instructions from '../Instructions';
 import Statistics from '../Statistics';
+import { GameContext } from '../../contexts/GameContext';
 
 function Header() {
   const { theme, toggleTheme } = useContext(ThemeContext);
+  const { isGameOver } = useContext(GameContext);
 
   const [isInstructionsModalOpen, setIsInstructionsModalOpen] = useState(false);
   const handleInstructionsModalClose = () => setIsInstructionsModalOpen(false);
@@ -24,6 +26,9 @@ function Header() {
       setTimeout(() => localStorage.setItem('isFistTime', 'false'), 1000);
     }
   }, []);
+  useEffect(() => {
+    if (isGameOver) handleStatisticsModalOpen();
+  }, [isGameOver]);
 
   return (
     <>
