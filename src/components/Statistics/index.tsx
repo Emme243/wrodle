@@ -1,6 +1,7 @@
 import { GameContext } from '../../contexts/GameContext';
 import { useContext } from 'react';
 import Modal from '../Modal';
+import { secondsToMinutesAndSeconds } from '../../helpers/secondsToMinutesAndSeconds';
 
 interface IStatisticsProps {
   isOpen: boolean;
@@ -8,8 +9,15 @@ interface IStatisticsProps {
 }
 
 function Statistics({ onClose, isOpen }: IStatisticsProps) {
-  const { isGameOver, hasLost, selectedWord, numberOfVictories, numberOfGames, resetGame } =
-    useContext(GameContext);
+  const {
+    isGameOver,
+    hasLost,
+    selectedWord,
+    numberOfVictories,
+    numberOfGames,
+    resetGame,
+    secondsInTimer,
+  } = useContext(GameContext);
 
   function handleClose() {
     if (isGameOver) resetGame();
@@ -39,7 +47,7 @@ function Statistics({ onClose, isOpen }: IStatisticsProps) {
         )}
         <div className="flex flex-col items-center">
           <p>SIGUIENTE PALABRA</p>
-          <p className="font-bold">04:10</p>
+          <p className="font-bold">{secondsToMinutesAndSeconds(secondsInTimer)}</p>
         </div>
         <div className="text-center">
           <button

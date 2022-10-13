@@ -5,6 +5,7 @@ import { initialState, reducer } from '../reducers/GameReducer';
 import { IGameState } from '../interfaces/GameState';
 import { IGameAction } from '../interfaces/GameAction';
 import { removeLetterAccents } from '../helpers/removeLetterAccents';
+import useTimer from '../hooks/useTimer';
 
 interface IGameContextProviderProps {
   children: ReactNode;
@@ -22,7 +23,10 @@ type IGameContext = {
   isGameOver: boolean;
   resetGame: () => void;
   backspace: () => void;
+  secondsInTimer: number;
 };
+
+const SECONDS_IN_TIMER = 300;
 
 const GameContext = createContext<IGameContext>({
   pressedLetters: [],
@@ -36,6 +40,7 @@ const GameContext = createContext<IGameContext>({
   isGameOver: false,
   resetGame: () => {},
   backspace: () => {},
+  secondsInTimer: SECONDS_IN_TIMER,
 });
 
 function GameContextProvider({ children }: IGameContextProviderProps) {
@@ -50,6 +55,14 @@ function GameContextProvider({ children }: IGameContextProviderProps) {
     numberOfVictories,
   } = state as IGameState;
 
+  const { seconds, restartTimer, isTimerDone } = useTimer(SECONDS_IN_TIMER, isGameOver);
+  useEffect(() => {
+    if (isTimerDone) {
+      dispatch({ type: 'INCREMENT_NUMBER_OF_GAMES' });
+      resetGame();
+    }
+  }, [isTimerDone]);
+
   async function fetchWordCatalog() {
     const response = await fetch(WordCatalog);
     const text = await response.text();
@@ -58,6 +71,7 @@ function GameContextProvider({ children }: IGameContextProviderProps) {
   function resetGame() {
     dispatch({ type: 'RESET_GAME' });
     dispatch({ type: 'SET_SELECTED_WORD' });
+    restartTimer();
   }
 
   const [pressedLetter, setPressedLetter] = useState<string | null>(null);
@@ -146,6 +160,7 @@ function GameContextProvider({ children }: IGameContextProviderProps) {
         numberOfGames,
         numberOfVictories,
         isGameOver,
+        secondsInTimer: seconds,
       }}
     >
       {children}

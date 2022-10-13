@@ -23,6 +23,7 @@ export const reducer = (state: IGameState, action: IGameAction) => {
     case 'SET_SELECTED_WORD': {
       const randomWord = state.wordCatalog[Math.floor(Math.random() * state.wordCatalog.length)];
       const newCatalog = state.wordCatalog.filter(word => word !== randomWord);
+      console.log({ randomWord });
       return {
         ...state,
         selectedWord: randomWord,
@@ -52,6 +53,12 @@ export const reducer = (state: IGameState, action: IGameAction) => {
       return {
         ...state,
         hasLost,
+      };
+    }
+    case 'SET_HAS_LOST': {
+      return {
+        ...state,
+        hasLost: action.payload,
       };
     }
     case 'ADD_PRESSED_LETTER': {
